@@ -1,0 +1,9 @@
+#ifndef EXECUTE_HPP
+#define EXECUTE_HPP
+
+#include <string>
+#include <vector>
+
+void executeCommand(const std::vector <std::string>& args);
+
+#endif
