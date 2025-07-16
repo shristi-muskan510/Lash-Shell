@@ -14,7 +14,7 @@ string trim(const string& input){
     return input.substr(start, end-start+1);
 }
 
-vector<string> parseInput(const string& input){
+vector<string> parseInput(const string& input) {
     vector<string> tokens;
     istringstream stream(input);
     string word;

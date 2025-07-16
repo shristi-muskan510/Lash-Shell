@@ -1,25 +1,33 @@
 #include <iostream>
 #include "../include/input.hpp"
 #include "../include/execute.hpp"
+#include "../include/history.hpp"
+#include <ncurses.h>
 
 using namespace std;
 
 int main(){
-    string input;
+    initscr();
+    raw();
+    keypad(stdscr, TRUE);
+    noecho();
+
+    loadHistory(".lash_history");
 
     while(1){
-        cout << "Lash> ";
-        getline(cin, input);
+        printw("Lash>");
+        refresh();
 
-        input = trim(input);
-        if(input == "exit")
-           break;
-        if(input.empty())
-           continue;
-        
-        vector <string> args = parseInput(input);
-        executeCommand(args);
+        string line = getInputWithHistory();
+        string trimmed = trim(line);
+
+        if(trimmed.empty()) continue;
+        if(trimmed == "exit") break;
+
+        addToHistory(trimmed);
+        vector<string> args = parseInput(trimmed);
+        executeCommand(args);  
     }
-
-    return 0;
+    
+    endwin();
 }
