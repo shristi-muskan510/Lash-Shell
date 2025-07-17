@@ -34,7 +34,7 @@ void showWelcomeInfo() {
     char hostname[255];
     gethostname(hostname, 255);
 
-    // Print system info in styled form
+    // Print system info
     std::cout << "\033[1;34m";
     std::cout << "Date & Time : " << dt;
     std::cout << "Hostname    : " << hostname << std::endl;
