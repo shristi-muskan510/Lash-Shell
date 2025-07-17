@@ -1,37 +1,31 @@
-#include <iostream>
 #include "../include/input.hpp"
 #include "../include/execute.hpp"
 #include "../include/history.hpp"
+#include "../include/utils.hpp"
 #include "../include/signal.hpp"
-#include <ncurses.h>
+#include <iostream>
 
 using namespace std;
 
-int main(){
-    initscr();
-    cbreak();
-    keypad(stdscr, TRUE);
-    noecho();
+int main() {
+    loadHistory(".lash_history");      // Load previous commands
 
-    loadHistory(".lash_history");
+    setupShellSignals();               // Handle Ctrl+C etc.
 
-    while(1){
-        // printw("Lash>");
-        // refresh();
+    while (true) {
+        cout << "\033[1;35mLash>\033[0m " << flush;
+        string line = getInputLine();   // Get raw input with history & prompt
+        string trimmed = trim(line);    // Remove leading/trailing spaces
 
-        string line = getInputWithHistory();
-        string trimmed = trim(line);
+        if (trimmed.empty()) continue;
+        if (trimmed == "exit") break;
 
-        if(trimmed.empty()) continue;
-        if(trimmed == "exit") break;
+        addToHistory(trimmed);               // Save to memory + file
 
-        addToHistory(trimmed);
-        vector<string> args = parseInput(trimmed);
-        executeCommand(args);
+        vector<string> args = parseInput(trimmed);  // Tokenize command
 
-        reset_prog_mode();
-        refresh();
+        executeCommand(args);                // Run command
     }
 
-    endwin();
+    return 0;
 }

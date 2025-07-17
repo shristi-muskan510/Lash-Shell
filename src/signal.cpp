@@ -8,8 +8,7 @@ using namespace std;
 
 void handleSigInt(int sig) {
     cout << "\n";
-    cout << "lash> ";
-    cout.flush();
+    cout << "\033[1;35mLash>\033[0m " << flush;
 }
 
 // Setup signal handling for shell itself

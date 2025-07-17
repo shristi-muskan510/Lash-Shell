@@ -1,71 +1,43 @@
 #include "../include/history.hpp"
+#include <vector>
+#include <string>
 #include <fstream>
-#include <ncurses.h>
-#include "history.hpp"
-using namespace std;
 
-static vector<string> history;
-static int historyIndex = -1;
+static std::vector<std::string> history;
+static int historyIndex = 0;
 
-void loadHistory(const string& filename){
-    ifstream file(filename);
-    string line;
-    while (getline(file, line)) {
-        history.push_back(line);
+void loadHistory(const std::string& filename) {
+    std::ifstream file(filename);
+    std::string line;
+    while (std::getline(file, line)) {
+        if (!line.empty()) history.push_back(line);
+    }
+    historyIndex = history.size();  // set to end
+}
+
+void addToHistory(const std::string& cmd) {
+    if (!cmd.empty()) {
+        history.push_back(cmd);
+        std::ofstream file(".lash_history", std::ios::app);
+        if (file) file << cmd << "\n";
+        historyIndex = history.size();
     }
 }
 
-void addToHistory(const string &cmd){
-    if (cmd.empty()) return;
-    
-    history.push_back(cmd);
-
-    ofstream file(".lash_history", ios::app); // append mode
-    if (file.is_open())
-        file << cmd << "\n";
+std::string getPrevCommand() {
+    if (historyIndex > 0) {
+        historyIndex--;
+        return history[historyIndex];
+    }
+    return "";
 }
 
-string getInputWithHistory()
-{
-    string input;
-    int ch;
-    historyIndex = history.size();
-
-    int promptY, promptX;
-    getyx(stdscr, promptY, promptX);
-
-    // Print prompt once
-    move(promptY+1, 0);
-    clrtoeol();
-    printw("Lash> ");
-    refresh();
-
-    while ((ch = getch()) != '\n') {
-        if (ch == KEY_UP) {
-            if (historyIndex > 0) {
-                historyIndex--;
-                input = history[historyIndex];
-            }
-        } else if (ch == KEY_DOWN) {
-            if (historyIndex < history.size() - 1) {
-                historyIndex++;
-                input = history[historyIndex];
-            } else {
-                historyIndex = history.size();
-                input.clear();
-            }
-        } else if (ch == KEY_BACKSPACE || ch == 127) {
-            if (!input.empty()) input.pop_back();
-        } else {
-            input += static_cast<char>(ch);
-        }
-
-        move(promptY, 0);
-        clrtoeol();  // Clear the whole line
-        printw("Lash> %s", input.c_str());
-        move(promptY, 6 + input.length());
-        refresh();
+std::string getNextCommand() {
+    if (historyIndex < (int)history.size() - 1) {
+        historyIndex++;
+        return history[historyIndex];
+    } else {
+        historyIndex = history.size();
+        return "";
     }
-
-    return input;
 }
