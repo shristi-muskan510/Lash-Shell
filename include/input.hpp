@@ -9,5 +9,3 @@ void enableRawMode();
 void disableRawMode();
 
 #endif
-
-

@@ -3,11 +3,15 @@
 #include "../include/history.hpp"
 #include "../include/utils.hpp"
 #include "../include/signal.hpp"
+#include "../include/banner.hpp"
 #include <iostream>
 
 using namespace std;
 
 int main() {
+    showBanner();
+    showWelcomeInfo();
+
     loadHistory(".lash_history");      // Load previous commands
 
     setupShellSignals();               // Handle Ctrl+C etc.

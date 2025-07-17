@@ -57,6 +57,5 @@ std::string getInputLine() {
     }
 
     disableRawMode();
-    addToHistory(input);
     return input;
 }
