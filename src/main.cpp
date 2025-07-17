@@ -2,21 +2,22 @@
 #include "../include/input.hpp"
 #include "../include/execute.hpp"
 #include "../include/history.hpp"
+#include "../include/signal.hpp"
 #include <ncurses.h>
 
 using namespace std;
 
 int main(){
     initscr();
-    raw();
+    cbreak();
     keypad(stdscr, TRUE);
     noecho();
 
     loadHistory(".lash_history");
 
     while(1){
-        printw("Lash>");
-        refresh();
+        // printw("Lash>");
+        // refresh();
 
         string line = getInputWithHistory();
         string trimmed = trim(line);
@@ -26,8 +27,11 @@ int main(){
 
         addToHistory(trimmed);
         vector<string> args = parseInput(trimmed);
-        executeCommand(args);  
+        executeCommand(args);
+
+        reset_prog_mode();
+        refresh();
     }
-    
+
     endwin();
 }

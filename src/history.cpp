@@ -27,9 +27,18 @@ void addToHistory(const string &cmd){
 
 string getInputWithHistory()
 {
-   string input;
+    string input;
     int ch;
     historyIndex = history.size();
+
+    int promptY, promptX;
+    getyx(stdscr, promptY, promptX);
+
+    // Print prompt once
+    move(promptY+1, 0);
+    clrtoeol();
+    printw("Lash> ");
+    refresh();
 
     while ((ch = getch()) != '\n') {
         if (ch == KEY_UP) {
@@ -51,12 +60,12 @@ string getInputWithHistory()
             input += static_cast<char>(ch);
         }
 
-        // Display updated input
-        clear();
+        move(promptY, 0);
+        clrtoeol();  // Clear the whole line
         printw("Lash> %s", input.c_str());
+        move(promptY, 6 + input.length());
         refresh();
     }
 
-    printw("\n");
     return input;
 }

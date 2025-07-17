@@ -1,9 +1,12 @@
 #include "../include/execute.hpp"
+#include "../include/signal.hpp"
+#include "../include/history.hpp"
 #include <iostream>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <fstream>
+#include <ncurses.h>
 
 using namespace std;
 
@@ -12,13 +15,16 @@ void executeCommand(const vector <string>& args){
        return;
 
     if(args[0] == "history"){
+        int row = 1;
         ifstream file(".lash_history");
         string line;
         int index = 1;
 
+        clear();
         while (std::getline(file, line)) {
-            cout << index++ << "  " << line << endl;
+            mvprintw(row++, 0, "%d  %s", index++, line.c_str());
         }
+        refresh();
 
         return;
     }
@@ -75,6 +81,8 @@ void executeCommand(const vector <string>& args){
         argv[cleanedArgs.size()] = nullptr;
 
         //fork and execvp
+        // printw("\n");
+        // refresh();
         pid_t pid = fork();
 
         if(pid == 0){
@@ -101,12 +109,20 @@ void executeCommand(const vector <string>& args){
                 close(fd);
             }
 
+            resetChildSignals();
+
+            def_prog_mode();   // Save current screen state
+            endwin();          // Stop ncurses, go to normal terminal mode
+
             execvp(argv[0], argv);
             perror("Execvp failed!");
             exit(1);
         }
         else if(pid>0){
             wait(nullptr);
+            reset_prog_mode(); // Restore ncurses mode
+            printw("\n");
+            refresh();         // Redraw screen
         }
         else{
             perror("Fork failed");
@@ -157,6 +173,8 @@ void executeCommand(const vector <string>& args){
                 for (const auto& s : commands[i])
                 argv.push_back(const_cast<char*>(s.c_str()));
                 argv.push_back(nullptr);
+
+                resetChildSignals();
 
                 execvp(argv[0], argv.data());
                 perror("execvp failed");
