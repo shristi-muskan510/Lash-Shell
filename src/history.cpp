@@ -17,10 +17,14 @@ void loadHistory(const std::string& filename) {
 
 void addToHistory(const std::string& cmd) {
     if (!cmd.empty()) {
-        history.push_back(cmd);
-        std::ofstream file(".lash_history", std::ios::app);
-        if (file) file << cmd << "\n";
-        historyIndex = history.size();
+
+        if(cmd != "history"){
+            history.push_back(cmd);
+            std::ofstream file(".lash_history", std::ios::app);
+            if (file) file << cmd << "\n";
+            historyIndex = history.size();
+
+        }
     }
 }
 

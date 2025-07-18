@@ -20,6 +20,15 @@ void executeCommand(const vector <string>& args){
         string line;
         int index = 1;
 
+        if(!file){
+            cout << "No history file found!\n";
+            return;
+        }
+
+        while(getline(file, line)){
+            cout << index++ << " " << line << "\n";
+        }
+
         return;
     }
     

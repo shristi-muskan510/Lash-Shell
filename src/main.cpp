@@ -5,6 +5,8 @@
 #include "../include/signal.hpp"
 #include "../include/banner.hpp"
 #include <iostream>
+#include <unistd.h>
+#include <limits.h>
 
 using namespace std;
 
@@ -17,7 +19,14 @@ int main() {
     setupShellSignals();               // Handle Ctrl+C etc.
 
     while (true) {
-        cout << "\033[1;35mLash>\033[0m " << flush;
+        //Print prompt
+        char cwd[PATH_MAX];
+        getcwd(cwd, sizeof(cwd));
+
+        cout << "\033[1;35mLash>\033[0m ";
+        cout << "\033[1;36m" << cwd << "\033[0m";
+        cout << " > " << flush;
+
         string line = getInputLine();   // Get raw input with history & prompt
         string trimmed = trim(line);    // Remove leading/trailing spaces
 

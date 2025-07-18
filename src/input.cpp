@@ -5,6 +5,8 @@
 #include <string>
 #include <iostream>
 
+using namespace std;
+
 static struct termios originalTermios;
 
 void disableRawMode() {
@@ -26,6 +28,8 @@ std::string getInputLine() {
 
     std::string input;
     char c;
+    char cwd[PATH_MAX];
+    getcwd(cwd, sizeof(cwd));
 
     while (read(STDIN_FILENO, &c, 1) == 1) {
         if (c == '\n') {
@@ -44,10 +48,19 @@ std::string getInputLine() {
             if (seq[0] == '[') {
                 if (seq[1] == 'A') {  // ↑
                     input = getPrevCommand();
-                    std::cout << "\r\033[K\033[1;35mlash>\033[0m " << input << std::flush;
+
+                    cout << "\33[2K\r";
+                    cout << "\033[1;35mLash>\033[0m ";
+                    cout << "\033[1;36m" << cwd << "\033[0m";
+                    cout << " > " << input << flush;
+
                 } else if (seq[1] == 'B') {  // ↓
                     input = getNextCommand();
-                    std::cout << "\r\033[K\033[1;35mlash>\033[0m " << input << std::flush;
+
+                    cout << "\33[2K\r";
+                    cout << "\033[1;35mLash>\033[0m ";
+                    cout << "\033[1;36m" << cwd << "\033[0m";
+                    cout << " > " << input << flush;
                 }
             }
         } else {

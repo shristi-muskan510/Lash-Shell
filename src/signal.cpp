@@ -8,7 +8,12 @@ using namespace std;
 
 void handleSigInt(int sig) {
     cout << "\n";
-    cout << "\033[1;35mLash>\033[0m " << flush;
+    char cwd[PATH_MAX];
+    getcwd(cwd, sizeof(cwd));
+
+    cout << "\033[1;35mLash>\033[0m ";
+    cout << "\033[1;36m" << cwd << "\033[0m";
+    cout << " > " << flush;
 }
 
 // Setup signal handling for shell itself
