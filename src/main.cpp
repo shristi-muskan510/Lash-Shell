@@ -1,14 +1,18 @@
 #include "../include/input.hpp"
 #include "../include/execute.hpp"
 #include "../include/history.hpp"
-#include "../include/utils.hpp"
 #include "../include/signal.hpp"
 #include "../include/banner.hpp"
+#include "../include/suggestion.hpp"
 #include <iostream>
 #include <unistd.h>
 #include <limits.h>
 
 using namespace std;
+
+vector<string> commands = {
+    "ls", "cd", "cat", "clear", "echo", "exit", "mkdir", "rmdir", "rm", "touch", "sudo", "apt", "pwd"
+};
 
 int main() {
     showBanner();
@@ -23,11 +27,11 @@ int main() {
         char cwd[PATH_MAX];
         getcwd(cwd, sizeof(cwd));
 
-        cout << "\033[1;35mLash>\033[0m ";
+        cout << "\033[1;35mLash \033[0m ";
         cout << "\033[1;36m" << cwd << "\033[0m";
         cout << " > " << flush;
 
-        string line = getInputLine();   // Get raw input with history & prompt
+        string line = getInputWithSuggestions(commands);   // Get raw input with history & prompt
         string trimmed = trim(line);    // Remove leading/trailing spaces
 
         if (trimmed.empty()) continue;
