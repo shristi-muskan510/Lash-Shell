@@ -5,7 +5,7 @@
 #include <vector>
 
 #pragma once
-std::string getInputWithSuggestions();
+std::string getInputWithSuggestions(const std::vector<std::string>& commandList);
 void enableRawMode();
 void disableRawMode();
 std::vector<std::string> parseInput(const std::string& input);
