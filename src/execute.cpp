@@ -10,9 +10,9 @@
 
 using namespace std;
 
-void executeCommand(const vector <string>& args){
+int executeCommand(const vector <string>& args){
     if(args.empty())
-       return;
+       return 1;
 
     if(args[0] == "history"){
         int row = 1;
@@ -22,14 +22,14 @@ void executeCommand(const vector <string>& args){
 
         if(!file){
             cout << "No history file found!\n";
-            return;
+            exit(0);
         }
 
         while(getline(file, line)){
             cout << index++ << " " << line << "\n";
         }
 
-        return;
+        return 1;
     }
     
     //Checks for pipe
@@ -39,6 +39,14 @@ void executeCommand(const vector <string>& args){
             hasPipe = true;
             break;
         }
+    }
+
+    //Checks for background process
+    bool isBackground = false;
+    vector<string> actualArgs = args;
+    if(args.back() == "&"){
+        isBackground = true;
+        actualArgs.pop_back();
     }
 
     if(!hasPipe){
@@ -52,7 +60,7 @@ void executeCommand(const vector <string>& args){
                     perror("cd failed!");
                 }
             }
-            return;
+            return 1;
         }
     
         //Checking IO redirection
@@ -117,7 +125,15 @@ void executeCommand(const vector <string>& args){
             exit(1);
         }
         else if(pid>0){
-            wait(nullptr);
+            if(!isBackground){
+                int status;
+                wait(nullptr);
+                return WIFEXITED(status) ? WEXITSTATUS(status) : -1;
+            }
+            else{
+                cout << "[background pid " << pid << "]" << endl;
+                return 0;
+            }
         }
         else{
             perror("Fork failed");
@@ -181,8 +197,17 @@ void executeCommand(const vector <string>& args){
 
         for (int i = 0; i < 2 * numPipes; ++i) 
             close(pipefd[i]);
-        for (int i = 0; i < commands.size(); ++i) 
-            wait(nullptr);
+        for (int i = 0; i < commands.size(); ++i){
+            if(!isBackground){
+                int status;
+                wait(nullptr);
+                return WIFEXITED(status) ? WEXITSTATUS(status) : -1;
+            }
+            else{
+                cout << "[background pid " << "]" << endl;
+                return 0;
+            }
+        }
         enableRawMode();   // Restore raw mode before next prompt
     }
 }

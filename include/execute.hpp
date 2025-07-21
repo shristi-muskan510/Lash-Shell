@@ -4,6 +4,6 @@
 #include <string>
 #include <vector>
 
-void executeCommand(const std::vector <std::string>& args);
+int executeCommand(const std::vector <std::string>& args);
 
 #endif
