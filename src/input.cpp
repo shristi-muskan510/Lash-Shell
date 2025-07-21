@@ -1,5 +1,6 @@
 #include "../include/input.hpp"
 #include "../include/history.hpp"
+#include "../include/suggestion.hpp"
 #include <termios.h>
 #include <unistd.h>
 #include <string>
@@ -53,16 +54,6 @@ void enableRawMode() {
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }
 
-vector<string> getSuggestions(const string& input, const vector<string>& commands) {
-    vector<string> suggestions;
-    for (const auto& cmd : commands) {
-        if (cmd.find(input) == 0) {
-            suggestions.push_back(cmd);
-        }
-    }
-    return suggestions;
-}
-
 std::string getInputWithSuggestions(const std::vector<std::string>& commandList) {
     enableRawMode();
 
@@ -96,15 +87,15 @@ std::string getInputWithSuggestions(const std::vector<std::string>& commandList)
             if (read(STDIN_FILENO, &seq[1], 1) != 1) break;
 
             if (seq[0] == '[') {
-                if (seq[1] == 'D') {  // ↑
+                if (seq[1] == 'A') {  // ↑
                     input = getPrevCommand();
                     showPrompt(input);
-                } else if (seq[1] == 'C') {  // ↓
+                } else if (seq[1] == 'B') {  // ↓
                     input = getNextCommand();
                     showPrompt(input);
-                } else if (seq[1] == 'A'){
+                } else if (seq[1] == 'D'){
                     if (suggestionIndex > 0) suggestionIndex--;
-                } else if (seq[1] == 'B'){
+                } else if (seq[1] == 'C'){
                     if (suggestionIndex < suggestions.size() - 1) suggestionIndex++;
                 }
             }
@@ -113,13 +104,13 @@ std::string getInputWithSuggestions(const std::vector<std::string>& commandList)
             cout << c << flush;  // Show typed char
         }
 
-        suggestions = getSuggestions(input, commandList);
+        suggestions = fuzzySearch(input, commandList);
         showPrompt(input);
 
         if (!suggestions.empty()) {
             cout << "\n";
 
-            for (int i = 0; i < suggestions.size(); ++i) {
+            for (int i = 0; i < 3; ++i) {
                 if (i == suggestionIndex)
                     cout << "\033[7m";  // Reverse for highlight
                 cout << suggestions[i] << "\033[0m ";

@@ -45,9 +45,9 @@ vector<string> loadAllSuggestions() {
     return vector<string>(unique.begin(), unique.end());
 }
 
-vector<string> fuzzySearch(const string& input, const vector<string>& pool) {
+vector<string> fuzzySearch(const string& input, const vector<string>& commands) {
     vector<string> matches;
-    for (const string& cmd : pool) {
+    for (const string& cmd : commands) {
         if (cmd.rfind(input, 0) == 0)  // only match if starts with input
             matches.push_back(cmd);
     }

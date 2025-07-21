@@ -10,10 +10,6 @@
 
 using namespace std;
 
-vector<string> commands = {
-    "ls", "cd", "cat", "clear", "echo", "exit", "mkdir", "rmdir", "rm", "touch", "sudo", "apt", "pwd"
-};
-
 int main() {
     showBanner();
     showWelcomeInfo();
@@ -30,7 +26,8 @@ int main() {
         cout << "\033[1;35mLash \033[0m ";
         cout << "\033[1;36m" << cwd << "\033[0m";
         cout << " > " << flush;
-
+        
+        vector<string> commands = loadAllSuggestions();
         string line = getInputWithSuggestions(commands);   // Get raw input with history & prompt
         string trimmed = trim(line);    // Remove leading/trailing spaces
 
