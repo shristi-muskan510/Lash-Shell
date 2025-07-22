@@ -4,6 +4,7 @@
 #include "../include/signal.hpp"
 #include "../include/banner.hpp"
 #include "../include/suggestion.hpp"
+#include "../include/configuration.hpp"
 #include <iostream>
 #include <unistd.h>
 #include <limits.h>
@@ -14,6 +15,7 @@ int main() {
     showBanner();
     showWelcomeInfo();
 
+    runCFile(".lashrc");
     loadHistory(".lash_history");      // Load previous commands
 
     setupShellSignals();               // Handle Ctrl+C etc.
