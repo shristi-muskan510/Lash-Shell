@@ -1,2 +1,3 @@
 echo Welcome user
 cd ..
+alias ll='ls -l'

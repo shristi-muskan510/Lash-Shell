@@ -116,7 +116,7 @@ std::string getInputWithSuggestions(const std::vector<std::string>& commandList)
                     cout << "\033[7m";  // Reverse for highlight
                 cout << suggestions[i] << "\033[0m ";
             }
-            
+
             cout << "\033[1A";
             cout << "\33[2K\r"; 
         }

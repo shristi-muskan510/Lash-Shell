@@ -1,6 +1,7 @@
 #include "../include/execute.hpp"
 #include "../include/signal.hpp"
 #include "../include/history.hpp"
+#include "../include/alias.hpp"
 #include <iostream>
 #include <unistd.h>
 #include <sys/wait.h>
@@ -30,6 +31,27 @@ int executeCommand(const vector <string>& args){
         }
 
         return 1;
+    }
+
+    if(args[0] == "alias"){
+        if(args.size() == 1){
+            showAlias();
+        } else{
+            string full = args[1];
+            if (full.find('=') != string::npos) {
+                size_t eqPos = full.find('=');
+
+                string name = full.substr(0, eqPos);
+                string value = full.substr(eqPos + 1);
+
+                // Remove surrounding single quotes if they exist
+                if (value.size() >= 2 && value.front() == '\'' && value.back() == '\'') {
+                    value = value.substr(1, value.size() - 2);
+                }
+
+                addAlias(name, value);
+            }
+        }
     }
     
     //Checks for pipe

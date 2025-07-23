@@ -5,6 +5,7 @@
 #include "../include/banner.hpp"
 #include "../include/suggestion.hpp"
 #include "../include/configuration.hpp"
+#include "../include/alias.hpp"
 #include <iostream>
 #include <unistd.h>
 #include <limits.h>
@@ -30,8 +31,8 @@ int main() {
         cout << " > " << flush;
         
         vector<string> commands = loadAllSuggestions();
-        string line = getInputWithSuggestions(commands);   // Get raw input with history & prompt
-        string trimmed = trim(line);    // Remove leading/trailing spaces
+        string line = getInputWithSuggestions(commands);   // Get raw input with suggestions
+        string trimmed = trim(line);    // Remove leading or trailing spaces
 
         if (trimmed.empty()) continue;
         if (trimmed == "exit") break;
@@ -39,6 +40,8 @@ int main() {
         addToHistory(trimmed);               // Save to memory + file
 
         vector<string> args = parseInput(trimmed);  // Tokenize command
+
+        args = resolveAlias(args);
 
         executeCommand(args);                // Run command
     }
