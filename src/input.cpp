@@ -139,5 +139,9 @@ std::string getInputWithSuggestions(const std::vector<std::string>& commandList)
     std::cout << "\33[2K\r"; 
     std::cout.flush();
 
-    return !suggestions.empty() ? suggestions[suggestionIndex] : input;
+    if (!suggestions.empty() && suggestionIndex < suggestions.size()) {
+        input = suggestions[suggestionIndex];
+    }
+
+    return input;
 }
