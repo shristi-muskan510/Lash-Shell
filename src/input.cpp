@@ -6,12 +6,14 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <limits.h>
 
 using namespace std;
 
 static struct termios originalTermios;
 
 void showPrompt(string input){
+    // Shows prompt
     char cwd[PATH_MAX];
     getcwd(cwd, sizeof(cwd));
 
@@ -22,22 +24,24 @@ void showPrompt(string input){
 
 }
 
-vector<string> parseInput(const string& input) {
-    istringstream iss(input);
-    vector<std::string> tokens;
-    string token;
-    while (iss >> token)
-        tokens.push_back(token);
-    return tokens;
-}
-
 string trim(const string& input) {
+    // Trims leading and trailing spaces
     size_t start = input.find_first_not_of(" \t\n\r");
     size_t end   = input.find_last_not_of(" \t\n\r");
 
     if (start == string::npos) return "";
 
     return input.substr(start, end - start + 1);
+}
+
+vector<string> parseInput(const string& input) {
+    // Tokenize input 
+    istringstream iss(input);
+    vector<std::string> tokens;
+    string token;
+    while (iss >> token)
+        tokens.push_back(token);
+    return tokens;
 }
 
 void disableRawMode() {
