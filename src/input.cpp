@@ -79,6 +79,7 @@ std::string getInputWithSuggestions(const std::vector<std::string>& commandList)
 
                 // Redraw the prompt with updated input
                 showPrompt(input);
+            }
         } else if (c == 127 || c == 8) {  // backspace
             if (!input.empty()) {
                 input.pop_back();
@@ -106,7 +107,7 @@ std::string getInputWithSuggestions(const std::vector<std::string>& commandList)
             input += c;
             cout << c << flush;  // Show typed char
         }
-
+        
         suggestions = fuzzySearch(input, commandList);
         showPrompt(input);
 
