@@ -3,22 +3,23 @@ Lash is a lightweight, user-friendly shell written in C++. It features intellige
 (This version works on MacOS only)
 
 ## Features
-- **Fuzzy Suggestions**: Real-time suggestions from commands, '$PATH', and history.
+- **Fuzzy Suggestions**: Real-time suggestions from commands, `$PATH`, and history.
 - **Arrow Key Navigation**: Cycle through suggestions and history with arrow keys.
-- **Command History**: Auto-saved and loaded from '.lash_history'.
-- **Aliases Support**:  Customize shortcuts via '.lashrc'.
-- **Background Jobs**: Support for '&' to run background processes.
-- **Pipes & Redirection**: Use '|', '>', '<' like regular shells.
+- **Command History**: Auto-saved and loaded from `.lash_history`.
+- **Aliases Support**:  Customize shortcuts via `.lashrc`.
+- **Background Jobs**: Support for `&` to run background processes.
+- **Pipes & Redirection**: Use `|`, `>`, `<` like regular shells.
 - **Minimal C++ Codebase**: Built from scratch without ncurses or heavy libraries.
 
 ## Installation Instruction:
 1. Download the Latest release: 
-wget https://github.com/shristi-muskan510/Lash-Shell/releases/download/v1.0.0/lash-v1.0.tar.gz
+  - wget https://github.com/shristi-muskan510/Lash-Shell/releases/download/v1.0.0/lash-v1.0.tar.gz
 2. Extract and install: 
-tar -xvzf lash-v1.0.tar.gz
-cd lash
-./install.sh
-3. Then run: ./lash
+  - tar -xvzf lash-v1.0.tar.gz
+  - cd lash
+  - ./install.sh
+3. Then run:
+  - ./lash
 
 ## Configuration:
 You can add aliases and customization in your home directory under ~./lashrc
