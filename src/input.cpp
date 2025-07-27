@@ -69,6 +69,9 @@ std::string getInputWithSuggestions(const std::vector<std::string>& commandList)
 
     while (read(STDIN_FILENO, &c, 1) == 1) {
         if (c == '\n') {
+            cout << endl;
+            break; // Actually execute the command
+        } else if(c == '\t'){
             if (!suggestions.empty()) {
                 input = suggestions[suggestionIndex];
                 suggestions.clear();  // Hide suggestions
@@ -76,10 +79,6 @@ std::string getInputWithSuggestions(const std::vector<std::string>& commandList)
 
                 // Redraw the prompt with updated input
                 showPrompt(input);
-            } else {
-                cout << endl;
-                break; // Actually execute the command
-            }
         } else if (c == 127 || c == 8) {  // backspace
             if (!input.empty()) {
                 input.pop_back();
