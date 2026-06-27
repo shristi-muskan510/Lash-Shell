@@ -73,12 +73,23 @@ std::string getInputWithSuggestions(const std::vector<std::string>& commandList)
             break; // Actually execute the command
         } else if(c == '\t'){
             if (!suggestions.empty()) {
+              // support multiple tabs
                 input = suggestions[suggestionIndex];
+                showPrompt(input);
+                char temp_c ;
+                while (read (STDIN_FILENO, &temp_c, 1) == 1){
+                    if (temp_c != '\t') break;
+
+                    // choose between three suggestions
+                    suggestionIndex = (suggestionIndex + 1) % min ((int)suggestions.size(), 3);
+                    input = suggestions[suggestionIndex];
+
+                    // Redraw the prompt with updated input
+                    showPrompt(input);
+                }
                 suggestions.clear();  // Hide suggestions
                 suggestionIndex = 0;
 
-                // Redraw the prompt with updated input
-                showPrompt(input);
             }
         } else if (c == 127 || c == 8) {  // backspace
             if (!input.empty()) {
@@ -115,7 +126,7 @@ std::string getInputWithSuggestions(const std::vector<std::string>& commandList)
             cout << "\n";
             cout << "\33[2K\r";
 
-            for (int i = 0; i < 3; ++i) {
+            for (int i = 0; i < min((int)suggestions.size(),3); ++i) {
                 if (i == suggestionIndex)
                     cout << "\033[7m";  // Reverse for highlight
                 cout << suggestions[i] << "\033[0m ";
