@@ -9,7 +9,7 @@ Lash is a lightweight, user-friendly shell written in C++. It features intellige
 - **Aliases Support**:  Customize shortcuts via `.lashrc`.
 - **Background Jobs**: Support for `&` to run background processes.
 - **Pipes & Redirection**: Use `|`, `>`, `<` like regular shells.
-- **Minimal C++ Codebase**: Built from scratch without ncurses or heavy libraries.
+- **Minimal C++ Codebase**: Built from scratch without heavy libraries.
 
 ## Installation Instruction:
 1. Download the Latest release: 
